@@ -193,14 +193,7 @@ export class Sim3D {
     this.cameraControls.update();
     this.renderer.render(this.scene, this.camera);
     if (this.debugMode) {
-      let debugScene = new THREE.Scene();
-      const box = new THREE.BoxGeometry(1, 1, 1);
-      const mat = new THREE.LineBasicMaterial({ color: 0x0000ff });
-      const mesh = new THREE.Mesh(box, mat);
-      debugScene.add(mesh);
-      this.renderer.autoClear = false;
-      this.renderer.render(debugScene, this.camera);
-      this.renderer.autoClear = true;
+      this.renderWireframes();
     }
   }
 
@@ -351,5 +344,75 @@ export class Sim3D {
 
   setDebugFlag(debug: boolean): void {
     this.debugMode = debug;
+  }
+
+  renderWireframes(): void {
+    let debugScene = new THREE.Scene();
+    let height = 3;
+    let material = new THREE.MeshBasicMaterial();
+    material.wireframe = true;
+    material.color = new THREE.Color("black");
+
+    for (let body = this.world.getBodyList(); body; body = body.getNext()) {
+      for (
+        let fixture = body.getFixtureList();
+        fixture;
+        fixture = fixture.getNext()
+      ) {
+        let shape = fixture.getShape();
+        let type = shape.getType();
+
+        if (type === "circle") {
+          let circleShape = <planck.CircleShape>shape;
+
+          let radius = circleShape.getRadius();
+          let geom = new THREE.CylinderGeometry(radius, radius, height);
+          let mesh = new THREE.Mesh(geom, material);
+
+          mesh.position.setX(body.getPosition().x);
+          mesh.position.setY(height / 2);
+          mesh.position.setZ(body.getPosition().y);
+          mesh.rotateY(body.getAngle());
+          debugScene.add(mesh);
+        } else if (type == "polygon") {
+          let polygonShape = <planck.PolygonShape>shape;
+          let vertices = polygonShape.m_vertices;
+
+          let geom = new THREE.Geometry();
+          const l = 2 * vertices.length;
+          vertices.forEach((vertex, index) => {
+            geom.vertices.push(new THREE.Vector3(vertex.x, 0, vertex.y));
+            geom.vertices.push(new THREE.Vector3(vertex.x, height, vertex.y));
+
+            geom.faces.push(
+              new THREE.Face3(
+                (2 * index) % l,
+                (2 * index + 1) % l,
+                (2 * index + 2) % l
+              )
+            );
+            geom.faces.push(
+              new THREE.Face3(
+                (2 * index + 2) % l,
+                (2 * index + 1) % l,
+                (2 * index + 3) % l
+              )
+            );
+          });
+          geom.computeFaceNormals();
+
+          let lines = new THREE.Mesh(geom, material);
+
+          lines.position.setX(body.getPosition().x);
+          lines.position.setZ(body.getPosition().y);
+          lines.rotateY(-body.getAngle());
+          debugScene.add(lines);
+        }
+      }
+    }
+
+    this.renderer.autoClear = false;
+    this.renderer.render(debugScene, this.camera);
+    this.renderer.autoClear = true;
   }
 }
