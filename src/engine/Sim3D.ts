@@ -42,7 +42,8 @@ const DEFAULT_CONFIG: SimulatorConfig = {
 
 export class Sim3D {
   private scene: THREE.Scene;
-  private renderer: THREE.Renderer;
+
+  private renderer: THREE.WebGLRenderer;
 
   private camera: THREE.PerspectiveCamera;
   private cameraControls: OrbitControls;
@@ -53,6 +54,8 @@ export class Sim3D {
 
   private simObjects: Map<string, ISimObjectContainer>;
   private objectFactories: ObjectFactories;
+
+  private debugMode: boolean = false;
 
   // Physics!
   private world: World;
@@ -189,6 +192,16 @@ export class Sim3D {
   render(): void {
     this.cameraControls.update();
     this.renderer.render(this.scene, this.camera);
+    if (this.debugMode) {
+      let debugScene = new THREE.Scene();
+      const box = new THREE.BoxGeometry(1, 1, 1);
+      const mat = new THREE.LineBasicMaterial({ color: 0x0000ff });
+      const mesh = new THREE.Mesh(box, mat);
+      debugScene.add(mesh);
+      this.renderer.autoClear = false;
+      this.renderer.render(debugScene, this.camera);
+      this.renderer.autoClear = true;
+    }
   }
 
   updatePhysics(time: number): void {
@@ -330,5 +343,13 @@ export class Sim3D {
 
     const handle = new RobotHandle(robot, robotRoot);
     return handle;
+  }
+
+  isDebugMode(): boolean {
+    return this.debugMode;
+  }
+
+  setDebugFlag(debug: boolean): void {
+    this.debugMode = debug;
   }
 }
