@@ -401,7 +401,7 @@ export class Sim3D {
           });
           geom.computeFaceNormals();
 
-          let lines = new THREE.Mesh(geom, material);
+          const lines = new THREE.Mesh(geom, material);
 
           lines.position.setX(body.getPosition().x);
           lines.position.setZ(body.getPosition().y);
