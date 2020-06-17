@@ -47,11 +47,11 @@ export interface IBoxSpec extends IBaseSimObjectSpec {
 }
 
 /**
- * Spec for a Simple Cylinder
+ * Spec for a Simple Pyramid
  */
 export interface IPyramidSpec extends IBaseSimObjectSpec {
   type: "pyramid";
-  baseDimensions: Vector2d;
+  baseDimensions: Vector2d; // These are the HALF extents
   height: number;
 }
 
