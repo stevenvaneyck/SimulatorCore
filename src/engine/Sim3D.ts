@@ -347,9 +347,9 @@ export class Sim3D {
   }
 
   renderWireframes(): void {
-    let debugScene = new THREE.Scene();
-    let height = 3;
-    let material = new THREE.MeshBasicMaterial();
+    const debugScene = new THREE.Scene();
+    const height = 3;
+    const material = new THREE.MeshBasicMaterial();
     material.wireframe = true;
     material.color = new THREE.Color("black");
 
@@ -359,15 +359,15 @@ export class Sim3D {
         fixture;
         fixture = fixture.getNext()
       ) {
-        let shape = fixture.getShape();
-        let type = shape.getType();
+        const shape = fixture.getShape();
+        const type = shape.getType();
 
         if (type === "circle") {
-          let circleShape = <planck.CircleShape>shape;
+          const circleShape = <planck.CircleShape>shape;
 
-          let radius = circleShape.getRadius();
-          let geom = new THREE.CylinderGeometry(radius, radius, height);
-          let mesh = new THREE.Mesh(geom, material);
+          const radius = circleShape.getRadius();
+          const geom = new THREE.CylinderGeometry(radius, radius, height);
+          const mesh = new THREE.Mesh(geom, material);
 
           mesh.position.setX(body.getPosition().x);
           mesh.position.setY(height / 2);
@@ -375,10 +375,10 @@ export class Sim3D {
           mesh.rotateY(body.getAngle());
           debugScene.add(mesh);
         } else if (type == "polygon") {
-          let polygonShape = <planck.PolygonShape>shape;
-          let vertices = polygonShape.m_vertices;
+          const polygonShape = <planck.PolygonShape>shape;
+          const vertices = polygonShape.m_vertices;
 
-          let geom = new THREE.Geometry();
+          const geom = new THREE.Geometry();
           const l = 2 * vertices.length;
           vertices.forEach((vertex, index) => {
             geom.vertices.push(new THREE.Vector3(vertex.x, 0, vertex.y));

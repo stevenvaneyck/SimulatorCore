@@ -132,13 +132,12 @@ function main() {
   robot.setMotorPower(0, 0.5);
   robot.setMotorPower(1, -0.5);
 
-  let buttonEl = document.createElement("button");
-  buttonEl.textContent = "Toggle wirefraeme";
-  buttonEl.addEventListener("click", (ev) => {
-    console.log("Clicked!");
+  const button = document.createElement("button");
+  button.textContent = "Toggle wirefraeme";
+  button.addEventListener("click", (ev) => {
     simulator.setDebugFlag(!simulator.isDebugMode());
     ev.stopPropagation();
     ev.preventDefault();
   });
-  document.body.appendChild(buttonEl);
+  document.body.appendChild(button);
 }
