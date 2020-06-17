@@ -55,7 +55,7 @@ export class Sim3D {
   private simObjects: Map<string, ISimObjectContainer>;
   private objectFactories: ObjectFactories;
 
-  private debugMode: boolean = false;
+  private debugMode = false;
 
   // Physics!
   private world: World;
