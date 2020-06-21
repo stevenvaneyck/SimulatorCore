@@ -1,4 +1,5 @@
 import { Sim3D, SimulatorConfig, RobotSpecs, RobotBuilder } from "../index";
+import * as dat from "dat.gui";
 
 let simulator: Sim3D;
 
@@ -25,8 +26,22 @@ window.onresize = () => {
   }
 };
 
+interface IArena {
+  xLength: number;
+  zLength: number;
+}
+
 function main() {
   const canvas = <HTMLCanvasElement>document.getElementById("demo1");
+
+  let arena: IArena = {
+    xLength: 10,
+    zLength: 20,
+  };
+
+  let gui = new dat.GUI();
+  gui.add(arena, "xLength");
+  gui.add(arena, "zLength", -2, 2);
 
   simulator = new Sim3D(canvas, simConfig);
   simulator.onresize();

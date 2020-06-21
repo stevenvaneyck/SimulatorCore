@@ -25,6 +25,8 @@
   },
   "homepage": "https://github.com/FRUK-Simulator/SimulatorCore#readme",
   "dependencies": {
+    "@types/dat.gui": "^0.7.5",
+    "dat.gui": "^0.7.7",
     "planck-js": "^0.3.18",
     "three": "^0.117.1",
     "typescript": "^3.9.5",
